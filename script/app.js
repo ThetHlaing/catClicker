@@ -23,7 +23,7 @@ var model = {
     {
         name: 'Cat E',
         clickCount: 0,
-        url: 'http://www.petsworld.in/blog/wp-content/uploads/2014/09/cute-kittens.jpg'
+        url: 'https://uploads.scratch.mit.edu/users/avatars/1385/1878.png'
     }]
 }
 
@@ -33,7 +33,7 @@ var octopus = {
     init: function () {
         model.currentCat = model.cats[0];
         catListView.init();
-        catDetailView.init();
+        catView.init();
     },
     getAllCats: function () {
         return model.cats;
@@ -66,7 +66,7 @@ var catView = {
         var currentCat = octopus.getCurrentCat();
         this.catImage.src = currentCat.url;
         this.catName.innerHTML = currentCat.name;
-        this.catClickCount = currentCat.clickCount;
+        this.catClickCount.textContent = "This cat has been clicked " + currentCat.clickCount + " times";
     }
 }
 
