@@ -1,0 +1,8 @@
+.catwrapper{
+    display:flex;
+    wrap:nowrap;
+    justify-content:space-around;
+}
+.catwrapper > img{
+    width:48%;
+}
