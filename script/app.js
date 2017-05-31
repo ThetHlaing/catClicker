@@ -34,6 +34,7 @@ var octopus = {
         model.currentCat = model.cats[0];
         catListView.init();
         catView.init();
+        adminView.init();
     },
     getAllCats: function () {
         return model.cats;
@@ -43,6 +44,13 @@ var octopus = {
     },
     setCurrentCat: function (cat) {
         model.currentCat = cat;
+    },
+    updateCurrentCat : function(cat){
+        model.currentCat.name = cat.name;
+        model.currentCat.url = cat.url;
+        model.currentCat.clickCount = cat.clickCount;
+        catView.render();
+        catListView.render();
     },
     incrementCounter: function () {
         model.currentCat.clickCount++;
@@ -66,7 +74,7 @@ var catView = {
         var currentCat = octopus.getCurrentCat();
         this.catImage.src = currentCat.url;
         this.catName.innerHTML = currentCat.name;
-        this.catClickCount.textContent = "This cat has been clicked " + currentCat.clickCount + " times";
+        this.catClickCount.textContent = "This cat has been clicked " + currentCat.clickCount + " times";        
     }
 }
 
@@ -77,7 +85,8 @@ var catListView = {
         this.render();
     },
     render: function () {
-        var cats = octopus.getAllCats();        
+        var cats = octopus.getAllCats();   
+        this.catListElement.innerHTML = "";     
         for(var index in cats) {
             var cat = cats[index];
             var liElement = document.createElement('li');
@@ -86,11 +95,56 @@ var catListView = {
                 return function(){
                     octopus.setCurrentCat(cat);
                     catView.render();
+                    adminView.hide();
                 }                
             })(cat));
             this.catListElement.appendChild(liElement);    
         }
     }
+}
+
+var adminView = {
+    init: function(){
+        
+        this.adminButton = document.getElementById("btnadmin");
+        this.adminPanel = document.getElementById("admin-panel");
+        this.nameInput = document.getElementById("input-cat-name");
+        this.imageInput = document.getElementById("input-cat-image");
+        this.clickCountInput = document.getElementById("input-click-count");                
+        this.saveButton = document.getElementById("btnsave");
+        this.cancelButton = document.getElementById("btncancel");
+
+        this.adminButton.addEventListener("click",function(){
+            adminView.render();
+        });
+        this.cancelButton.addEventListener("click",function(){
+            adminView.hide();
+        });
+        this.saveButton.addEventListener("click",function(){
+            adminView.saveCatInformation();
+            adminView.hide();
+        });
+
+        this.hide();
+    },
+    render:function(){        
+        var cat = octopus.getCurrentCat();
+        this.nameInput.value = cat.name;
+        this.imageInput.value = cat.url;
+        this.clickCountInput.value = cat.clickCount;
+        this.adminPanel.style.display = "block";
+    },
+    hide:function(){
+        this.adminPanel.style.display = "none";
+    },
+    saveCatInformation: function(){
+        var updatedCat = {};
+        updatedCat.name = this.nameInput.value;
+        updatedCat.url = this.imageInput.value;
+        updatedCat.clickCount = this.clickCountInput.value;
+        octopus.updateCurrentCat(updatedCat);        
+    }
+
 }
 
 document.addEventListener("DOMContentLoaded", function () {
